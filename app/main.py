@@ -19,3 +19,4 @@ app.include_router(products.router,  prefix="/api/products", tags=["products"])
 @app.get("/")
 async def hello():
     return RedirectResponse(url="/docs/")
+
