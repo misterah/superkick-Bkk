@@ -21,10 +21,13 @@ def users_collection():
     return db["users"]
 
 def orders_collection():
-    return db["order"]
+    return db["orders"]
 
 def shipping_collection():
     return db["shipping"]
+
+def order_items_collection():
+    return db["order_items"]
 
 # products_collection = 
 # orders_collection = db["orders"]

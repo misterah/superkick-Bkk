@@ -7,10 +7,6 @@ import json
 router = APIRouter()
 
 
-@router.get("/")
-async def create_course_endpoint():
-    return {"hello":"555"}
-
 @router.get("/all/")
 def get_all_products():
     product = products_collection().find()
