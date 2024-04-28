@@ -6,23 +6,39 @@ import json
 
 router = APIRouter()
 
-
+#users ทั้งหมด
 @router.get("/all/")
 def get_all_users():
     users = users_collection().find()
     #print(product,type(product))
     return {"users": json.loads(json_util.dumps(users))}
-
+#สร้าง user
 @router.post("/users/")
-def create_users(user_data: Customer):
+def create_user(user_data: Customer):
     user_id = users_collection().insert_one(user_data.dict()).inserted_id
     return {"users": "User created successfully", "user_id": str(user_id)}
-
-# @router.get("/products/{sneakers_id}")
-# def get_product(sneakers_id: str):
-#     product = products_collection().find_one({"sneakers_id": sneakers_id})
-#     if product:
-#         product["_id"] = str(product["_id"])  # Convert ObjectId to string
-#         return product
-#     else:
-#         raise HTTPException(status_code=404, detail="Product not found")
+#เรียก user
+@router.get("/users/{users_id}")
+def get_user(users_id: str):
+    user = users_collection().find_one({"_id": ObjectId(users_id)})
+    if user:
+        user["_id"] = str(user["_id"])  # Convert ObjectId to string
+        return user
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+#edit user
+@router.put("/users/{users_id}")
+def update_user(users_id: str, users_data: dict):
+    result = users_collection().update_one({"_id": ObjectId(users_id)}, {"$set": users_data})
+    if result.modified_count == 1:
+        return {"message": "User updated successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+#delete user
+@router.delete("/users/{users_id}")
+def delete_user(users_id: str):
+    result = users_collection().delete_one({"_id": ObjectId(users_id)})
+    if result.deleted_count == 1:
+        return {"message": "User deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
