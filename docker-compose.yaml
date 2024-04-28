@@ -1,0 +1,13 @@
+version: "3.8" #1
+
+services: #2
+  supperkick-bkk: #3
+    build: . #4
+    command:
+      ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app/app
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80
