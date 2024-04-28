@@ -9,5 +9,5 @@ class Product(BaseModel):
     sneakers_categories: str
     sneakers_detail: str
     image_url: str
-    sneakers_sizes: str
+    sneakers_sizes: list
 

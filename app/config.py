@@ -17,6 +17,14 @@ db = client['dev_superkick']
 def products_collection():
     return db["products"]
 
+def users_collection():
+    return db["users"]
+
+def orders_collection():
+    return db["order"]
+
+def shipping_collection():
+    return db["shipping"]
 
 # products_collection = 
 # orders_collection = db["orders"]
