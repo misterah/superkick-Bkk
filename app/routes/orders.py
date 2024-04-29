@@ -20,7 +20,7 @@ async def testorder():
 
 # @router.post("/cart/{sneakers_id}/{sneakers_size}/{quantity}}")
 @router.post("/checkout")
-def add_to_cart(sneakers_id: str,sneakers_size: str,quantity: str):
+def add_to_cart():
     
 
     return
