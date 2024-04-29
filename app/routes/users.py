@@ -31,7 +31,7 @@ def register_user(register_request: RegisterRequest):
 
 @router.post("/login/")
 def login_user(login_request: LoginRequest):
-    # user = users_collection().find_one({"username": login_request.username})
+
     user = users_collection().find_one({
     "$or": [
         {"username": login_request.username},
@@ -42,7 +42,7 @@ def login_user(login_request: LoginRequest):
         # Create JWT token with user's username and expiration time
         access_token_expires = timedelta(minutes=30)
         access_token = create_access_token(data={"sub": user["username"]}, expires_delta=access_token_expires)
-        return {"access_token": access_token, "token_type": "bearer"}
+        return {"access_token": access_token, "token_type": "bearer","username":user["username"]}
     else:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
 
