@@ -9,7 +9,8 @@ client = MongoClient(MONGO_URL, connect=False)
 db = client['dev_superkick']
 
 
-
+def db_call():
+    return db
 
 # def product_collection():
 #     return DB.get_collection("products")
@@ -26,6 +27,8 @@ def orders_collection():
 def shipping_collection():
     return db["shipping"]
 
+def counter_collection():
+    return db["order_counter"]
 
 
 if not SECRET_KEY:
