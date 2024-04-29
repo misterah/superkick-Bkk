@@ -1,13 +1,13 @@
 from pymongo import MongoClient
 import os
-
+import secrets
+# Generate a random 32-byte key
+SECRET_KEY = secrets.token_hex(32)
 
 MONGO_URL = os.getenv("MONGO_URL")
 client = MongoClient(MONGO_URL, connect=False)
-# CLIENT = AsyncIOMotorClient(MONGO_URL)
-# DB_NAME = "dev_superkick"
-# DB = CLIENT.get_database(DB_NAME)
 db = client['dev_superkick']
+
 
 
 
@@ -17,11 +17,20 @@ db = client['dev_superkick']
 def products_collection():
     return db["products"]
 
+def users_collection():
+    return db["users"]
 
-# products_collection = 
-# orders_collection = db["orders"]
-# shipping_collection = db["shipping"]
-# users_collection = db["users"]
+def orders_collection():
+    return db["orders"]
+
+def shipping_collection():
+    return db["shipping"]
+
+
+
+if not SECRET_KEY:
+    raise ValueError("No SECRET_KEY set for Flask application. Please set SECRET_KEY in your .env file.")
+
 
 
 
