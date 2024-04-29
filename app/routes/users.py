@@ -1,10 +1,44 @@
-from fastapi import APIRouter, HTTPException
-from models.users import Customer
-from config import users_collection
+
+from fastapi import APIRouter, HTTPException, Depends
+from passlib.context import CryptContext
+import jwt
+from datetime import datetime, timedelta
 from bson import ObjectId, json_util
 import json
 
+from models.users import Customer, RegisterRequest, LoginRequest
+from config import users_collection, SECRET_KEY
+
 router = APIRouter()
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+#create JWT token
+def create_access_token(data: dict, expires_delta: timedelta):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
+    return encoded_jwt
+
+@router.post("/register/")
+def register_user(register_request: RegisterRequest):
+    hashed_password = pwd_context.hash(register_request.password)
+    new_user = Customer(username=register_request.username, email=register_request.email, hashed_password=hashed_password)
+    users_collection().insert_one(new_user.dict())
+    return {"message": "User registered successfully"}
+
+@router.post("/login/")
+def login_user(login_request: LoginRequest):
+    user = users_collection().find_one({"username": login_request.username})
+    if user and pwd_context.verify(login_request.password, user["hashed_password"]):
+        # Create JWT token with user's username and expiration time
+        access_token_expires = timedelta(minutes=30)
+        access_token = create_access_token(data={"sub": user["username"]}, expires_delta=access_token_expires)
+        return {"access_token": access_token, "token_type": "bearer"}
+    else:
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
 
 #users ทั้งหมด
 @router.get("/all/")
@@ -42,3 +76,5 @@ def delete_user(users_id: str):
         return {"message": "User deleted successfully"}
     else:
         raise HTTPException(status_code=404, detail="User not found")
+    
+
