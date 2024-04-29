@@ -31,7 +31,13 @@ def register_user(register_request: RegisterRequest):
 
 @router.post("/login/")
 def login_user(login_request: LoginRequest):
-    user = users_collection().find_one({"username": login_request.username})
+    # user = users_collection().find_one({"username": login_request.username})
+    user = users_collection().find_one({
+    "$or": [
+        {"username": login_request.username},
+        {"email": login_request.username}
+    ]
+})
     if user and pwd_context.verify(login_request.password, user["hashed_password"]):
         # Create JWT token with user's username and expiration time
         access_token_expires = timedelta(minutes=30)
