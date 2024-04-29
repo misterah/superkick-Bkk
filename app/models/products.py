@@ -8,14 +8,8 @@ class Product(BaseModel):
     sneakers_price: str
     sneakers_categories: str
     sneakers_detail: str
-    image_url: str
+    image_url: list
     sneakers_sizes: list
-
-
-class Order(BaseModel):
-    products: object
-    total_price: str
-    
 
 class ShippingAddress(BaseModel):
     name: str
@@ -24,3 +18,10 @@ class ShippingAddress(BaseModel):
     tel: str
     address: str
     date_added: str
+
+class Order(BaseModel):
+    products: object
+    total_price: str
+    detail: ShippingAddress
+
+
